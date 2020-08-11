@@ -372,12 +372,18 @@ public class SpringApplication {
 		// Create and configure the environment
 		/**
 		 * 创建环境
-		 * 根据环境配置初始化不同的ConfigurableEnvironment ：None Server reactive
+		 * 根据环境配置初始化不同的ConfigurableEnvironment ：
+		 * None: StandardEnvironment
+		 * Server:StandardServletEnvironment
+		 * reactive:StandardReactiveWebEnvironment
 		 */
 		ConfigurableEnvironment environment = getOrCreateEnvironment();
-		//配置环境
+		/**
+		 * 配置环境:读取系统级配置和系统级环境：
+		 *添加了两个包含java系统属性和操作系统环境变量的两个对象：MapPropertySource和SystemEnvironmentPropertySource
+		 */
 		configureEnvironment(environment, applicationArguments.getSourceArgs());
-		//
+
 		ConfigurationPropertySources.attach(environment);
 		//3、监听器准备
 		listeners.environmentPrepared(environment);
@@ -393,7 +399,8 @@ public class SpringApplication {
 	private Class<? extends StandardEnvironment> deduceEnvironmentClass() {
 		switch (this.webApplicationType) {
 		/**
-		 * StandardEnvironment的customizePropertySource方法加载
+		 * StandardEnvironment的customizePropertySource方法加载系统配置和系统环境
+		 * 定位到这些文件在哪里
 		 * systemProperties：
 		 * systemEnvironment：
 		 */
